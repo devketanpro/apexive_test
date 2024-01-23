@@ -1,0 +1,76 @@
+[project]
+name = "apexive_test"
+version = "1.0.0"
+description = "To adhere to Django's best practices, create a view that employs dynamic field serialization for a Django project featuring basic Author and Book models."
+readme = "README.md"
+authors = [{name = "Apexive OSS", email = "open-source@apexive.com"}]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Internet"
+]
+requires-python = ">=3.8"
+urls = { homepage = "http://localhost/" }
+
+dependencies = [
+    "Django>4",
+    "djangorestframework>=3",
+]
+
+
+[build-system]
+requires = ['setuptools>=68.1.0', 'wheel']
+build-backend = 'setuptools.build_meta'
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include =  ["df_auth*"]
+
+[tools.black]
+max-line-length = 88
+
+
+[tool.ruff]
+line-length = 79
+fix = true
+
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+     "migrations",
+     "venv",
+     ".pyc",
+     "pyo",
+     "__pycache__",
+     "db.sqlite3"
+     ".env"
+]
+
+
+# Assume Python 3.8.10
+target-version = "py38"
+
+
+[tool.mypy]
+
+ignore_missing_imports = true
+disable_error_code = "attr-defined, valid-type"
+disallow_untyped_defs = true
+exclude = "venv|migrations|build|dist|docs"
+
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "tests.settings"
+
