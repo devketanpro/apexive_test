@@ -52,12 +52,18 @@ List the software and tools that need to be installed before running the Dhango 
    python manage.py runserver
    ```
 
-3. Access the application at 
+3. Run tests:
+
+   ```bash
+   python manage.py test
+   ```
+
+4. Access the application at 
 
    `http://localhost:8000/`
 
 
 
-4. Use this book API (`http://localhost:8000/books/`) to perform book   related action.
+5. Use this book API (`http://localhost:8000/books/`) to perform book   related action.
 
-5. Use this author API (`http://localhost:8000/author/`) to perform author related action.
+6. Use this author API (`http://localhost:8000/author/`) to perform author related action.

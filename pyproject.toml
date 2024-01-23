@@ -23,6 +23,11 @@ dependencies = [
     "djangorestframework>=3",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-django",
+]
 
 [build-system]
 requires = ['setuptools>=68.1.0', 'wheel']
@@ -54,13 +59,17 @@ exclude = [
      "pyo",
      "__pycache__",
      "db.sqlite3"
-     ".env"
+     ".env",
+     "pytest_cache",
+
 ]
 
 
 # Assume Python 3.8.10
 target-version = "py38"
 
+[tool.ruff.per-file-ignores]
+"tests/*" = ["S105", "S106"]
 
 [tool.mypy]
 
@@ -70,6 +79,11 @@ disallow_untyped_defs = true
 exclude = "venv|migrations|build|dist|docs"
 
 plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "tests.settings"
+
+[tool.pytest.ini_options]
 
 [tool.django-stubs]
 django_settings_module = "tests.settings"
