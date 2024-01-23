@@ -1,3 +1,5 @@
+from datetime import date
+
 from rest_framework import serializers
 
 from myapp.models import (
@@ -16,9 +18,24 @@ class BookSerializer(serializers.ModelSerializer):
     based on the Book model's attributes.
     """
 
+    author_name = serializers.CharField(source="author.name", read_only=True)
+    since_creation_in_days = serializers.SerializerMethodField(
+        "get_since_creation_in_days"
+    )
+
     class Meta:
         model = Book
-        fields = "__all__"
+        fields = (
+            "title",
+            "published_date",
+            "author",
+            "author_name",
+            "since_creation_in_days",
+        )
+
+    def get_since_creation_in_days(self, obj: Book) -> str:
+        days_since_creation = (date.today() - obj.published_date).days
+        return days_since_creation
 
 
 class AuthorSerializer(serializers.ModelSerializer):
