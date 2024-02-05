@@ -9,5 +9,5 @@ router.register(r"books", BookViewSet, basename="book")
 urlpatterns = [
     path("", include(router.urls)),
     path('authors-with-multiple-books/', AuthorsWithMultipleBooksAPIView.as_view(), name='authors_with_multiple_books_api'),
-    path('books/published-after/<str:date>/', PublishedAfterBookList.as_view(), name='published-after-book-list'),
+    path('books-published-after/<str:date>/', PublishedAfterBookList.as_view(), name='published-after-book-list'),
 ]
