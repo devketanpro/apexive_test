@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 
 from myapp.models import Author, Book
 from myapp.serializers import AuthorSerializer, BookSerializer
@@ -72,3 +72,76 @@ class BookViewSet(viewsets.ModelViewSet):
 
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+
+
+class PublishedAfterBookList(generics.ListAPIView):
+    """
+    A DRF API endpoint that returns a list of books published after a specified date.
+
+    Parameters:
+    - `date` (str): The date in the format 'YYYY-MM-DD'. Books published after this date will be included.
+
+    Example Usage:
+    ```
+    GET /books/published_after/2023-01-01/
+    ```
+    Serializer:
+    - Uses `BookSerializer` for serializing the book objects.
+
+    View:
+    - Inherits from DRF's `generics.ListAPIView`.
+    - Overrides the `get_queryset` method to filter books based on the provided date.
+
+    Note: The `published_after` method is assumed to be a custom manager method in the Book model.
+
+    """
+
+    serializer_class = BookSerializer
+
+    def get_queryset(self):
+        """
+        Get a queryset of books published after the specified date.
+
+        Returns:
+        - Queryset of books meeting the criteria.
+        """
+
+        date = self.kwargs['date']
+        return Book.objects.published_after(date)
+    
+
+class AuthorsWithMultipleBooksAPIView(generics.ListAPIView):
+    """
+    API endpoint to retrieve a list of authors with multiple books.
+
+    This endpoint returns a list of authors who have written more than one book.
+
+    ## Response
+    - HTTP 200 OK: Returns a list of authors with their details.
+
+    ### Serializer
+    - `AuthorSerializer`: Serializes Author instances.
+
+    ### Method
+    - `GET`: Retrieves a list of authors with multiple books.
+
+    ### Query Parameters
+    - No specific query parameters are required.
+
+    ## Example Usage
+    ```bash
+    curl -X GET http://localhost:8000/authors-with-multiple-books/
+    ```
+    """
+
+    serializer_class = AuthorSerializer
+
+    def get_queryset(self):
+        """
+        Get the queryset of authors with multiple books.
+
+        Returns:
+        - Queryset of authors with multiple books.
+        """
+        return Book.objects.authors_with_multiple_books()
+    

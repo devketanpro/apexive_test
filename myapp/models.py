@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import  Subquery, Count
 
 
 class Author(models.Model):
@@ -38,42 +39,23 @@ class BookQuerySet(models.QuerySet):
     """
 
     def published_after(self, date):
+        """
+        Returns a queryset of books who have published after the given date.
+        """
         return self.filter(published_date__gt=date)
-
-
-class BookManager(models.Manager):
-    """
-    Custom manager for the Book model.
-
-    This manager enhances the default queryset capabilities by using a custom
-    queryset class called BookQuerySet. It provides additional methods for
-    querying and filtering Book objects.
-
-    Methods:
-        - published_after(date): Returns a queryset of books published after
-          the specified date.
-
-    Usage example:
-    ```
-    # Get books published after a specific date
-    recent_books = Book.objects.published_after(some_date)
-    ```
-    """
-
-    def get_queryset(self):
+    
+    def authors_with_multiple_books(self):
         """
-        Returns a queryset using the custom BookQuerySet.
+        Returns a queryset of authors who have written multiple books.
         """
+        subquery = (
+            self.values('author')
+            .annotate(book_count=Count('author'))
+            .filter(book_count__gt=1)
+            .values('author')
+        )
 
-        return BookQuerySet(self.model, using=self._db)
-
-    def published_after(self, date):
-        """
-        Returns a queryset of books published after the specified date.
-        """
-
-        return self.get_queryset().published_after(date)
-
+        return Author.objects.filter(pk__in=Subquery(subquery))
 
 class Book(models.Model):
     """
@@ -94,6 +76,8 @@ class Book(models.Model):
     title = models.CharField(max_length=200)
     published_date = models.DateField()
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="books")
+
+    objects = BookQuerySet.as_manager()
 
     def __str__(self):
         """
